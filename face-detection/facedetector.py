@@ -13,7 +13,7 @@ parse = argparse.ArgumentParser(description='Process parameters yolo')
 parse.add_argument('--video',type=str,default='',help='Your Video Path')
 args = parse.parse_args()
 
-BASE_PATH  = os.getcwd()
+BASE_PATH  = os.path.join(os.getcwd(),'face-detection')
 MODEL_DATA = os.path.join(BASE_PATH,'model_data')
 MODEL_PATH = os.path.join(MODEL_DATA,'face_human.h5')
 ANCHORS_PATH = os.path.join(MODEL_DATA,'face_anchors.txt')
@@ -88,4 +88,6 @@ def detect_video(video_path,isout=True):
 if __name__ =='__main__':
     video_path = args.video
     print(video_path)
+    print(BASE_PATH)
+    print(MODEL_PATH)
     detect_video(video_path)
