@@ -5,18 +5,29 @@ from yolo import YOLO
 from yolo import detect_video
 import matplotlib.pyplot as plt
 from timeit import default_timer as timer
+import os
+import argparse
+import sys
+
+parse = argparse.ArgumentParser(description='Process parameters yolo')
+parse.add_argument('--video',type=str,default='',help='Your Video Path')
+args = parse.parse_args()
+
+BASE_PATH  = os.getcwd()
+MODEL_DATA = os.path.join(BASE_PATH,'model_data')
+MODEL_PATH = os.path.join(MODEL_DATA,'face_human.h5')
+ANCHORS_PATH = os.path.join(MODEL_DATA,'face_anchors.txt')
+CLASSES_PATH = os.path.join(MODEL_DATA,'face_classes.txt')
 option = {
-        "model_path": 'model_data/face_human.h5',
-        "anchors_path": 'model_data/face_anchors.txt',
-        "classes_path": 'model_data/face_classes.txt',
+        "model_path": MODEL_PATH,
+        "anchors_path": ANCHORS_PATH,
+        "classes_path": CLASSES_PATH,
         "score" : 0.25,
         "iou" : 0.35,
         "model_image_size" : (416, 416),
         "gpu_num" : 1,
 }
-
 yolo_model = YOLO(**option)
-
 #lay ra 1 list câc dictionary, mỗi dictionary gồm label và box, trong đó label chứa class name(face hoặc human ở đây mình chỉ chọn face thôi)
 #còn box chứa tọa độ 2 điểm top left và right bottom
 def getFrameBoundingBoxes(frame):
@@ -48,7 +59,9 @@ def detect_video(video_path,isout=True):
     curr_fps = 0
     fps = "FPS: ??"
     prev_time = timer()
+    count = 0
     while True:
+        count+=1
         return_value, frame = vid.read()
         if frame is not None:
             image = detect_frame(frame)
@@ -73,4 +86,6 @@ def detect_video(video_path,isout=True):
     yolo_model.close_session()
 
 if __name__ =='__main__':
-    detect_video('now two.mp4')
+    video_path = args.video
+    print(video_path)
+    detect_video(video_path)
